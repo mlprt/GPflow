@@ -84,13 +84,13 @@ def multivariate_normal(x, mu, L):
     p[n] = log pdf of:
     x[n] ~ N(mu, LL^T) or x ~ N(mu[n], LL^T) or x[n] ~ N(mu[n], LL^T)
     """
-    if x.shape.ndims is None:
+    if len(x.shape) is None:
         logger.warn('Shape of x must be 2D at computation.')
-    elif x.shape.ndims != 2:
+    elif len(x.shape) != 2:
         raise ValueError('Shape of x must be 2D.')
-    if mu.shape.ndims is None:
+    if len(mu.shape) is None:
         logger.warn('Shape of mu may be unknown or not 2D.')
-    elif mu.shape.ndims != 2:
+    elif len(mu.shape) != 2:
         raise ValueError('Shape of mu must be 2D.')
 
     d = x - mu
