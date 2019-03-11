@@ -14,32 +14,24 @@
 
 import numpy as np
 import pytest
-import six
 import tensorflow as tf
-from collections import namedtuple
 from numpy.testing import assert_allclose
 
 import gpflow
+from gpflow import settings
 from gpflow.features import InducingPointsBase
 from gpflow.likelihoods import (Likelihood, Bernoulli, Exponential, Gamma, Gaussian, MultiClass,
                                 Ordinal, Poisson, Softmax, StudentT, RobustMax, Beta, GaussianMC,
                                 SwitchedLikelihood)
-from gpflow.expectations import variationals
-from gpflow import settings
-# from gpflow.test_util import:
 from gpflow.quadrature import ndiagquad
 
 tf.random.set_seed(99012)
-#
-# class LikelihoodSetup(object):
-#     def __init__(self, likelihood, Y, tolerance):
-#         self.likelihood, self.Y, self.tolerance = likelihood, Y, tolerance
-#         self.is_analytic = six.get_unbound_function(likelihood.predict_density) is not \
-#                            six.get_unbound_function(gpflow.likelihoods.Likelihood.predict_density)
+
 
 def is_analytic(likelihood):
     method = likelihood.__class__.predict_density
     return method is Likelihood.predict_density
+
 
 class Datum:
     tolerance = 1e-06
@@ -53,17 +45,14 @@ class Datum:
     def square(x: tf.Tensor) -> tf.Tensor:
         return tf.square(x)
 
-# class LikelihoodSetup(object):
-#     def __init__(self, likelihood, Y=Datum.Y, rtol=1e-06, atol=0.):
-#         self.likelihood = likelihood
-#         self.Y = Y
-#         self.rtol = rtol
-#         self.atol = atol
 
+class LikelihoodSetup(object):
+    def __init__(self, likelihood, Y=Datum.Y, rtol=1e-06, atol=0.):
+        self.likelihood = likelihood
+        self.Y = Y
+        self.rtol = rtol
+        self.atol = atol
 
-
-LikelihoodSetup = namedtuple('LikelihoodSetup', ('likelihood', 'Y', 'rtol', 'atol'))
-LikelihoodSetup.__new__.__defaults__ =(None, Datum.Y, 1e-6, 0.)
 
 likelihood_setups = [
     LikelihoodSetup(Gaussian()),
